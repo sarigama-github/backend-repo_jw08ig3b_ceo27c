@@ -12,9 +12,9 @@ Model name is converted to lowercase for the collection name:
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 
-# Example schemas (replace with your own):
+# Example schemas (retain as reference)
 
 class User(BaseModel):
     """
@@ -38,11 +38,20 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
-# --------------------------------------------------
+# Lamrrari specific schemas
 
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+class Build(BaseModel):
+    """
+    Customer car builds (configurator)
+    Collection name: "build"
+    """
+    model_id: str = Field(..., description="ID of the selected model")
+    model_name: str = Field(..., description="Name of the selected model")
+    color: str = Field(..., description="Selected exterior color (hex or name)")
+    wheels: str = Field(..., description="Selected wheel design")
+    interior: str = Field(..., description="Selected interior theme")
+    addons: List[str] = Field(default_factory=list, description="Optional add-on packages")
+    region: Optional[str] = Field(None, description="Market region (e.g., UAE, EU, IN)")
+    price: float = Field(..., ge=0, description="Final configured price in USD")
+    customer_name: Optional[str] = Field(None, description="Optional: customer name for lead")
+    customer_email: Optional[str] = Field(None, description="Optional: customer email for lead")
